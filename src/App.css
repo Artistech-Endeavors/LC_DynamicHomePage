@@ -1,0 +1,209 @@
+/* =========================================================
+   LC_DynamicHomePage — FileMaker Web Viewer Styles
+   Matches the FileMaker portal appearance on the Home layout.
+   ========================================================= */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+}
+
+body {
+  font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+  font-size: 13px;
+  color: #1d1d1f;
+  background: transparent;
+}
+
+#root {
+  height: 100%;
+}
+
+/* ---- App container ---- */
+.app {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* ---- Server list ---- */
+.server-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  background: #f0f0f0;
+}
+
+.server-list--error,
+.server-list--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 16px;
+  color: #555;
+  font-size: 12px;
+}
+
+.server-list--error {
+  color: #721c24;
+}
+
+.server-list__error-icon {
+  font-size: 16px;
+}
+
+/* ---- Server row ---- */
+.server-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-bottom: 1px solid #d0d0d0;
+  background: #f8f8f8;
+  min-height: 46px;
+  user-select: none;
+  transition: background 0.1s;
+}
+
+.server-row:nth-child(even) {
+  background: #efefef;
+}
+
+.server-row:last-child {
+  border-bottom: none;
+}
+
+.server-row--clickable {
+  cursor: pointer;
+}
+
+.server-row--clickable:hover {
+  background: #ddeeff;
+}
+
+.server-row--clickable:active {
+  background: #c8dff8;
+}
+
+/* ---- Row: icon column ---- */
+.server-row__icon {
+  flex: 0 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.server-row__icon-placeholder {
+  font-size: 18px;
+  color: #888;
+  line-height: 1;
+}
+
+/* ---- Row: main column (name + comments) ---- */
+.server-row__main {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.server-row__name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #1d1d1f;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.server-row__comments {
+  font-size: 11px;
+  color: #777;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---- Row: meta column (badge + version + general status) ---- */
+.server-row__meta {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  min-width: 120px;
+  max-width: 200px;
+}
+
+.server-row__version {
+  font-size: 10px;
+  color: #888;
+}
+
+.server-row__general-status {
+  font-size: 10px;
+  color: #555;
+}
+
+/* ---- Status badge ---- */
+.status-badge {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+  line-height: 16px;
+}
+
+/* ---- Skeleton loading rows ---- */
+.server-row--skeleton {
+  pointer-events: none;
+}
+
+.skeleton {
+  border-radius: 4px;
+  background: linear-gradient(90deg, #e0e0e0 25%, #ececec 50%, #e0e0e0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+}
+
+.skeleton--icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  flex: 0 0 22px;
+}
+
+.skeleton--name {
+  width: 60%;
+  height: 13px;
+  margin-bottom: 3px;
+}
+
+.skeleton--comments {
+  width: 40%;
+  height: 10px;
+}
+
+.skeleton--badge {
+  width: 70px;
+  height: 18px;
+  border-radius: 10px;
+}
+
+@keyframes skeleton-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
