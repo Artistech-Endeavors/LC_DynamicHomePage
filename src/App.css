@@ -3,6 +3,33 @@
    Matches the FileMaker portal appearance on the Home layout.
    ========================================================= */
 
+/* ---- CSS Variables ---- */
+:root {
+  --color-bg:           #f0f0f0;
+  --color-row-odd:      #f8f8f8;
+  --color-row-even:     #efefef;
+  --color-row-hover:    #ddeeff;
+  --color-row-active:   #c8dff8;
+  --color-border:       #d0d0d0;
+  --color-text:         #1d1d1f;
+  --color-text-muted:   #777;
+  --color-text-faint:   #999;
+  --color-icon:         #5e8ec4;
+
+  /* Status badge colors */
+  --badge-ready-bg:          #d4edda; --badge-ready-text:          #155724; --badge-ready-border:          #b7dfc3;
+  --badge-running-bg:        #cce5ff; --badge-running-text:        #004085; --badge-running-border:        #b0d4f8;
+  --badge-update-bg:         #fff3cd; --badge-update-text:         #7d5a00; --badge-update-border:         #ffe08a;
+  --badge-stopped-bg:        #ffe5cc; --badge-stopped-text:        #7a3a00; --badge-stopped-border:        #ffd0aa;
+  --badge-closed-bg:         #e2e3e5; --badge-closed-text:         #383d41; --badge-closed-border:         #cfd0d2;
+  --badge-offline-bg:        #f8d7da; --badge-offline-text:        #721c24; --badge-offline-border:        #f0b8bd;
+  --badge-users-blocked-bg:  #f8d7da; --badge-users-blocked-text:  #721c24; --badge-users-blocked-border:  #f0b8bd;
+  --badge-failed-bg:         #f8d7da; --badge-failed-text:         #721c24; --badge-failed-border:         #f0b8bd;
+  --badge-loading-bg:        #e8f0fe; --badge-loading-text:        #3c63bb; --badge-loading-border:        #c8d8f8;
+  --badge-unknown-bg:        #e2e3e5; --badge-unknown-text:        #6c757d; --badge-unknown-border:        #cfd0d2;
+}
+
+/* ---- Reset ---- */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -18,7 +45,7 @@ html, body {
 body {
   font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
   font-size: 13px;
-  color: #1d1d1f;
+  color: var(--color-text);
   background: transparent;
 }
 
@@ -39,17 +66,28 @@ body {
   flex-direction: column;
   width: 100%;
   height: 100%;
-  overflow-y: auto;
-  background: #f0f0f0;
+  background: var(--color-bg);
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.06);
+  overflow: hidden;
 }
 
-.server-list--error,
-.server-list--empty {
+.server-list__rows {
+  flex: 1 1 auto;
   display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.server-list__rows.server-list--error,
+.server-list__rows.server-list--empty {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 16px;
+  gap: 8px;
+  padding: 20px 16px;
   color: #555;
   font-size: 12px;
 }
@@ -59,7 +97,70 @@ body {
 }
 
 .server-list__error-icon {
-  font-size: 16px;
+  font-size: 18px;
+}
+
+/* ---- Retry button ---- */
+.server-list__retry-btn {
+  margin-left: 4px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-family: inherit;
+  color: #004085;
+  background: #cce5ff;
+  border: 1px solid #b0d4f8;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.server-list__retry-btn:hover {
+  background: #b8daff;
+}
+
+/* ---- Footer ---- */
+.server-list__footer {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px 5px;
+  border-top: 1px solid var(--color-border);
+  background: rgba(0,0,0,0.025);
+}
+
+.server-list__timestamp {
+  font-size: 10px;
+  color: var(--color-text-faint);
+}
+
+/* ---- Status dot ---- */
+.status-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.status-dot--live {
+  background: #34c759;
+  box-shadow: 0 0 0 2px rgba(52,199,89,0.2);
+}
+
+.status-dot--loading {
+  background: #f0a500;
+  animation: dot-pulse 1s ease-in-out infinite;
+}
+
+.status-dot--error {
+  background: #ff3b30;
+  box-shadow: 0 0 0 2px rgba(255,59,48,0.2);
+}
+
+@keyframes dot-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
 }
 
 /* ---- Server row ---- */
@@ -68,15 +169,16 @@ body {
   align-items: center;
   gap: 8px;
   padding: 7px 10px;
-  border-bottom: 1px solid #d0d0d0;
-  background: #f8f8f8;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-row-odd);
   min-height: 46px;
   user-select: none;
-  transition: background 0.1s;
+  animation: row-in 0.18s ease both;
+  animation-delay: calc(var(--row-index, 0) * 40ms);
 }
 
 .server-row:nth-child(even) {
-  background: #efefef;
+  background: var(--color-row-even);
 }
 
 .server-row:last-child {
@@ -85,28 +187,35 @@ body {
 
 .server-row--clickable {
   cursor: pointer;
+  transition: background 0.1s;
 }
 
 .server-row--clickable:hover {
-  background: #ddeeff;
+  background: var(--color-row-hover);
 }
 
 .server-row--clickable:active {
-  background: #c8dff8;
+  background: var(--color-row-active);
+}
+
+/* Row entry animation */
+@keyframes row-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* ---- Row: icon column ---- */
 .server-row__icon {
-  flex: 0 0 28px;
+  flex: 0 0 26px;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: var(--color-icon);
 }
 
-.server-row__icon-placeholder {
-  font-size: 18px;
-  color: #888;
-  line-height: 1;
+.server-row__db-icon {
+  width: 20px;
+  height: 20px;
 }
 
 /* ---- Row: main column (name + comments) ---- */
@@ -121,7 +230,7 @@ body {
 .server-row__name {
   font-size: 13px;
   font-weight: 500;
-  color: #1d1d1f;
+  color: var(--color-text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -129,7 +238,7 @@ body {
 
 .server-row__comments {
   font-size: 11px;
-  color: #777;
+  color: var(--color-text-muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -142,18 +251,51 @@ body {
   flex-direction: column;
   align-items: flex-end;
   gap: 2px;
-  min-width: 120px;
-  max-width: 200px;
+  min-width: 110px;
+  max-width: 190px;
 }
 
 .server-row__version {
   font-size: 10px;
-  color: #888;
+  color: var(--color-text-faint);
 }
 
 .server-row__general-status {
   font-size: 10px;
   color: #555;
+}
+
+/* ---- Row: chevron ---- */
+.server-row__chevron {
+  flex: 0 0 14px;
+  font-size: 15px;
+  color: #b0b8c4;
+  line-height: 1;
+  visibility: hidden;
+  transition: color 0.1s;
+}
+
+.server-row--clickable .server-row__chevron {
+  visibility: visible;
+}
+
+.server-row--clickable:hover .server-row__chevron {
+  color: #5e8ec4;
+}
+
+/* ---- Overflow row ---- */
+.server-row--overflow {
+  justify-content: center;
+  min-height: 30px;
+  background: var(--color-bg) !important;
+  border-top: 1px solid var(--color-border);
+  animation: none;
+}
+
+.server-row__overflow-text {
+  font-size: 11px;
+  color: var(--color-text-faint);
+  font-style: italic;
 }
 
 /* ---- Status badge ---- */
@@ -165,11 +307,24 @@ body {
   font-weight: 500;
   white-space: nowrap;
   line-height: 16px;
+  border: 1px solid transparent;
 }
+
+.status-badge--ready           { background: var(--badge-ready-bg);         color: var(--badge-ready-text);         border-color: var(--badge-ready-border); }
+.status-badge--running         { background: var(--badge-running-bg);        color: var(--badge-running-text);        border-color: var(--badge-running-border); }
+.status-badge--update-available{ background: var(--badge-update-bg);         color: var(--badge-update-text);         border-color: var(--badge-update-border); }
+.status-badge--stopped         { background: var(--badge-stopped-bg);        color: var(--badge-stopped-text);        border-color: var(--badge-stopped-border); }
+.status-badge--closed          { background: var(--badge-closed-bg);         color: var(--badge-closed-text);         border-color: var(--badge-closed-border); }
+.status-badge--offline         { background: var(--badge-offline-bg);        color: var(--badge-offline-text);        border-color: var(--badge-offline-border); }
+.status-badge--users-blocked   { background: var(--badge-users-blocked-bg);  color: var(--badge-users-blocked-text);  border-color: var(--badge-users-blocked-border); }
+.status-badge--failed          { background: var(--badge-failed-bg);         color: var(--badge-failed-text);         border-color: var(--badge-failed-border); }
+.status-badge--loading         { background: var(--badge-loading-bg);        color: var(--badge-loading-text);        border-color: var(--badge-loading-border); }
+.status-badge--unknown         { background: var(--badge-unknown-bg);        color: var(--badge-unknown-text);        border-color: var(--badge-unknown-border); }
 
 /* ---- Skeleton loading rows ---- */
 .server-row--skeleton {
   pointer-events: none;
+  animation: none;
 }
 
 .skeleton {
@@ -180,25 +335,25 @@ body {
 }
 
 .skeleton--icon {
-  width: 22px;
-  height: 22px;
-  border-radius: 4px;
-  flex: 0 0 22px;
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  flex: 0 0 20px;
 }
 
 .skeleton--name {
-  width: 60%;
+  width: 58%;
   height: 13px;
   margin-bottom: 3px;
 }
 
 .skeleton--comments {
-  width: 40%;
+  width: 38%;
   height: 10px;
 }
 
 .skeleton--badge {
-  width: 70px;
+  width: 66px;
   height: 18px;
   border-radius: 10px;
 }
@@ -207,3 +362,4 @@ body {
   0%   { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
+
